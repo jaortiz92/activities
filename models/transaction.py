@@ -31,7 +31,7 @@ class Transaction(Base):
         "origins.origin_id"), nullable=False)
     origin = relationship("Origin", back_populates="transactions")
 
-    activities = relationship("Activite", back_populates="transactions")
+    activities = relationship("Activity", back_populates="transaction")
 
     value = Column(Integer, nullable=False)
     detail = Column(String)

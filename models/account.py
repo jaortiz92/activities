@@ -18,3 +18,5 @@ class Account(Base):
     class_account = relationship("ClassAccount", back_populates="accounts")
 
     account = Column(String, nullable=False)
+
+    activities = relationship("Activity", back_populates="account")

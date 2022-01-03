@@ -17,3 +17,4 @@ class Description(Base):
     group = relationship("Group", back_populates="descriptions")
 
     description = Column(String, nullable=False)
+    transactions = relationship("Transaction", back_populates="description")

@@ -1,12 +1,13 @@
 # Python
 from datetime import datetime
+from typing import Optional
 
 # Pydantic
 from pydantic import BaseModel
 from pydantic import Field
 
 # App
-from .transaction import Transaction
+from .transaction import TransactionShow
 from .account import Account
 from config import Nature
 
@@ -25,7 +26,7 @@ class ActivityCreate(ActivityBase):
 
 class ActivityShow(ActivityBase):
     activity_id: int = Field(...)
-    transaction: Transaction = Field(...)
+    transaction: TransactionShow = Field(...)
     account: Account = Field(...)
     created_date: datetime = Field(...)
-    updated_date: datetime = Field(...)
+    updated_date: Optional[datetime] = Field(...)

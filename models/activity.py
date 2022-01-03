@@ -18,7 +18,7 @@ class Activity(Base):
                          index=True, autoincrement=True)
 
     transaction_id = Column(Integer, ForeignKey(
-        "transactions.transaction_id"), nullable=False)
+        "transactions.transaction_id", ondelete='CASCADE'), nullable=False)
     transaction = relationship("Transaction", back_populates="activities")
 
     account_id = Column(Integer, ForeignKey(

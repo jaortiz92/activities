@@ -17,3 +17,4 @@ class Category(Base):
     group = relationship("Group", back_populates="categories")
 
     category = Column(String, nullable=False)
+    transactions = relationship("Transaction", back_populates="category")

@@ -17,3 +17,4 @@ class Kind(Base):
     group = relationship("Group", back_populates="kinds")
 
     kind = Column(String, nullable=False)
+    transactions = relationship("Transaction", back_populates="kind")

@@ -7,6 +7,7 @@ from sqlalchemy import (
 # APP
 from config import Base
 from config import Nature
+from sqlalchemy.orm import relationship
 
 
 class ClassAccount(Base):
@@ -18,3 +19,5 @@ class ClassAccount(Base):
     nature = Column(Enum(Nature), nullable=False)
 
     class_account = Column(String, nullable=False)
+
+    accounts = relationship("Account", back_populates="class_account")
