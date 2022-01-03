@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class Nature(Enum):
+class Nature(IntEnum):
     CR = 0
     DB = 1
