@@ -15,3 +15,7 @@ def get_account(db: Session, account_id: int):
     if db_account:
         return db_account
     return None
+
+
+def get_accounts(db: Session):
+    return db.query(Account).all()

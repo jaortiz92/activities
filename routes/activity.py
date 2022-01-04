@@ -12,7 +12,6 @@ from sqlalchemy.orm.session import Session
 # App
 #from schemas import Message, MessageCreate
 from config import SessionLocal
-from models.activity import Activity
 from schemas import ActivityCreate, ActivityShow
 import services
 from .exceptions import (
