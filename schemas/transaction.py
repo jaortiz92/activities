@@ -11,7 +11,7 @@ from .category import Category
 from .description import Description
 from .kind import Kind
 from .origin import Origin
-#from .activity import ActivityShow
+from .activity import ActivityShow
 
 
 class TransactionBase(BaseModel):
@@ -36,6 +36,6 @@ class TransactionShow(TransactionBase):
     description: Description = Field(...)
     kind: Kind = Field(...)
     origin: Origin = Field(...)
-    #activities: List[ActivityShow] = Field(...)
+    activities: List[ActivityShow] = Field(...)
     created_date: datetime = Field(...)
     updated_date: Optional[datetime] = Field(...)
