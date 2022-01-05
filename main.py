@@ -8,7 +8,9 @@ from routes import activity, account
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(
+    docs_url="/"
+)
 
 # Path Operations
 app.include_router(activity)

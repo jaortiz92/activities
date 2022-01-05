@@ -29,7 +29,13 @@ class Transaction(Base):
 
     origin_id = Column(Integer, ForeignKey(
         "origins.origin_id"), nullable=False)
-    origin = relationship("Origin", back_populates="transactions")
+    origin = relationship("Origin", foreign_keys=[
+                          origin_id])  # , back_populates="transaction_origin"
+
+    destiny_id = Column(Integer, ForeignKey(
+        "origins.origin_id"), nullable=False)
+    destiny = relationship("Origin", foreign_keys=[
+                           destiny_id])  # , back_populates="transaction_destiny"
 
     activities = relationship("Activity", back_populates="transaction")
 

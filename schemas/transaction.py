@@ -28,6 +28,7 @@ class TransactionCreate(TransactionBase):
     description_id: int = Field(...)
     kind_id: int = Field(...)
     origin_id: int = Field(...)
+    destiny_id: int = Field(...)
 
 
 class TransactionShow(TransactionBase):
@@ -36,6 +37,7 @@ class TransactionShow(TransactionBase):
     description: Description = Field(...)
     kind: Kind = Field(...)
     origin: Origin = Field(...)
+    destiny: Origin = Field(...)
     activities: List[ActivityShow] = Field(...)
     created_date: datetime = Field(...)
     updated_date: Optional[datetime] = Field(...)

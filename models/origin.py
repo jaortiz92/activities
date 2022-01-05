@@ -14,4 +14,5 @@ class Origin(Base):
                        index=True, autoincrement=True)
 
     origin = Column(String, nullable=False)
-    transactions = relationship("Transaction", back_populates="origin")
+    #transactions_origin = relationship("Transaction", back_populates="origin")
+    #transactions_destiny = relationship("Transaction", back_populates="origin")
