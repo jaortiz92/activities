@@ -14,14 +14,14 @@ from config import Nature
 
 class ActivityBase(BaseModel):
     nature: Nature = Field(...)
-    transaction_id: int = Field(...)
+    transaction_id: int = Field(..., gt=0)
 
     class Config:
         orm_mode = True
 
 
 class ActivityCreate(ActivityBase):
-    account_id: int = Field(...)
+    account_id: int = Field(..., gt=0)
 
 
 class ActivityShow(ActivityBase):

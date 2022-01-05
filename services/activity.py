@@ -34,10 +34,10 @@ def get_activities(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_activity(db: Session, activity: schemas.ActivityCreate):
-    db_activity: Activity = Activity(**activity.dict())
     validation = validate_foreign_keys(db, activity)
     if validation:
         return validation
+    db_activity: Activity = Activity(**activity.dict())
     db.add(db_activity)
     db.commit()
     db.refresh(db_activity)
@@ -54,13 +54,13 @@ def delete_activity(db: Session, activity_id: int):
 
 
 def update_activity(db: Session, activity_id: int, activity: schemas.ActivityCreate):
+    validation = validate_foreign_keys(db, activity)
+    if validation:
+        return validation
     db_activity = db.query(Activity).filter(
         Activity.activity_id == activity_id
     )
     if db_activity:
-        validation = validate_foreign_keys(db, activity)
-        if validation:
-            return validation
         db_activity.update(activity.dict())
         db.commit()
         return get_activity(db, activity_id)

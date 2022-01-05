@@ -1,20 +1,8 @@
 from fastapi import HTTPException, status
 
 
-def not_found(string):
+def register_not_found(register):
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail=string
+        detail=f"{register} does not exist"
     )
-
-
-def activity_not_exist():
-    not_found("activity_id does not exist")
-
-
-def transaction_not_exist():
-    not_found("transaction_id does not exist")
-
-
-def account_not_exist():
-    not_found("account_id does not exist")

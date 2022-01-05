@@ -16,7 +16,7 @@ from .activity import ActivityShow
 
 class TransactionBase(BaseModel):
     transaction_date: date = Field(...)
-    value: int = Field(...)
+    value: int = Field(..., gt=0, lt=70000000)
     detail: Optional[str] = Field(default=None)
 
     class Config:
@@ -24,11 +24,11 @@ class TransactionBase(BaseModel):
 
 
 class TransactionCreate(TransactionBase):
-    category_id: int = Field(...)
-    description_id: int = Field(...)
-    kind_id: int = Field(...)
-    origin_id: int = Field(...)
-    destiny_id: int = Field(...)
+    category_id: int = Field(..., gt=0)
+    description_id: int = Field(..., gt=0)
+    kind_id: int = Field(..., gt=0)
+    origin_id: int = Field(..., gt=0)
+    destiny_id: int = Field(..., gt=0)
 
 
 class TransactionShow(TransactionBase):

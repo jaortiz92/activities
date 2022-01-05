@@ -14,16 +14,8 @@ from sqlalchemy.orm.session import Session
 from config import SessionLocal
 from schemas import Account
 import services
-from .exceptions import account_not_exist
-
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+from .exceptions import register_not_found
+from .dependency import get_db
 
 
 # Account
@@ -69,7 +61,7 @@ def show_all_accounts(
     summary="Show a Account"
 )
 def show_an_account(
-    account_id: int = Path(...),
+    account_id: int = Path(..., gt=0),
     db: Session = Depends(get_db)
 ):
     """
@@ -92,5 +84,5 @@ def show_an_account(
     """
     response = services.get_account(db, account_id)
     if not response:
-        account_not_exist()
+        register_not_found("Account")
     return response

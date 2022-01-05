@@ -11,21 +11,11 @@ from sqlalchemy.orm.session import Session
 
 # App
 #from schemas import Message, MessageCreate
-from config import SessionLocal
+
 from schemas import ActivityCreate, ActivityShow
 import services
-from .exceptions import (
-    activity_not_exist, account_not_exist,
-    transaction_not_exist)
-
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+from .exceptions import register_not_found
+from .dependency import get_db
 
 
 # Activity
@@ -57,15 +47,7 @@ def show_all_activities(
     - nature: int,
     - transaction_id: int,
     - activity_id: int,
-    - account: {
-        -  account_id: int,
-        -  class_account: {
-            -    class_account_id: int,
-            -    nature: int,
-            -    class_account: str
-      },
-        -  account: str
-    },
+    - account: Acount
     - created_date: datetime,
     - updated_date: datetime
     """
@@ -79,7 +61,7 @@ def show_all_activities(
     summary="Show a activity"
 )
 def show_an_activity(
-    activity_id: int = Path(...),
+    activity_id: int = Path(..., gt=0),
     db: Session = Depends(get_db)
 ):
     """
@@ -96,21 +78,13 @@ def show_an_activity(
     - nature: int,
     - transaction_id: int,
     - activity_id: int,
-    - account: {
-        -  account_id: int,
-        -  class_account: {
-            -    class_account_id: int,
-            -    nature: int,
-            -    class_account: str
-      },
-        -  account: str
-    },
+    - account: Acount
     - created_date: datetime,
     - updated_date: datetime
     """
     response = services.get_activity(db, activity_id)
     if not response:
-        activity_not_exist()
+        register_not_found("Activity")
     return response
 
 
@@ -127,7 +101,7 @@ def create_an_activity(
     """
     Create an Activity
 
-    This path operation register a activity in the app
+    This path operation register an activity in the app
 
     Parameters:
     - Register body parameter
@@ -140,23 +114,15 @@ def create_an_activity(
     - nature: int,
     - transaction_id: int,
     - activity_id: int,
-    - account: {
-        -  account_id: int,
-        -  class_account: {
-            -    class_account_id: int,
-            -    nature: int,
-            -    class_account: str
-      },
-        -  account: str
-    },
+    - account: Acount
     - created_date: datetime,
     - updated_date: datetime
     """
     response = services.create_activity(db, activity)
     if response == "transaction":
-        transaction_not_exist()
+        register_not_found("Transaction")
     if response == "account":
-        account_not_exist()
+        register_not_found("Account")
     return response
 
 
@@ -166,7 +132,7 @@ def create_an_activity(
     summary="Delete an Activity"
 )
 def delete_an_activity(
-    activity_id: int = Path(...),
+    activity_id: int = Path(..., gt=0),
     db: Session = Depends(get_db)
 ):
     """
@@ -182,7 +148,7 @@ def delete_an_activity(
     """
     response = services.delete_activity(db, activity_id)
     if not response:
-        activity_not_exist()
+        register_not_found("Activity")
     return {"detail": response}
 
 
@@ -193,7 +159,7 @@ def delete_an_activity(
     summary="Update an Activity"
 )
 def update_an_activity(
-    activity_id: int = Path(...),
+    activity_id: int = Path(..., gt=0),
     activity: ActivityCreate = Body(...),
     db: Session = Depends(get_db)
 ):
@@ -209,12 +175,21 @@ def update_an_activity(
         - nature: int
         - transaction_id: int
         - account_id: int
+
+    Retrurns a json with an activity, with the following keys
+
+    - nature: int,
+    - transaction_id: int,
+    - activity_id: int,
+    - account: Acount
+    - created_date: datetime,
+    - updated_date: datetime
     """
     response = services.update_activity(db, activity_id, activity)
     if not response:
-        account_not_exist()
+        register_not_found("Activity")
     if response == "transaction":
-        transaction_not_exist()
+        register_not_found("Transaction")
     if response == "account":
-        account_not_exist()
+        register_not_found("Account")
     return response
