@@ -30,3 +30,7 @@ class ActivityShow(ActivityBase):
     account: Account = Field(...)
     created_date: datetime = Field(...)
     updated_date: Optional[datetime] = Field(...)
+
+
+class ActivityCompleteCreate(ActivityCreate):
+    transaction_id: Optional[int] = Field(default=None, gt=0)
