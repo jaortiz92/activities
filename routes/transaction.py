@@ -136,7 +136,7 @@ def create_a_transaction(
     - kind: Kind,
     - origin: Origin,
     - destiny: Destiny,
-    - activities: [Activity],
+    - activities: [],
     - created_date: datetime,
     - updated_date: datetime
     """
@@ -165,6 +165,10 @@ def delete_a_transaction(
 
     Return a json with information about deletion
     """
+    query = services.get_activities_by_transaction_id(db, transaction_id)
+    if len(query) > 0:
+        for activity in query:
+            services.delete_activity(db, activity.activity_id)
     response = services.delete_transaction(db, transaction_id)
     if not response:
         register_not_found("Transaction")
