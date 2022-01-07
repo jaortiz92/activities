@@ -7,7 +7,6 @@ from fastapi import status
 from fastapi import Depends
 from fastapi import Body, Path
 from sqlalchemy.orm.session import Session
-from sqlalchemy.sql.expression import case
 
 # App
 from schemas import Category
