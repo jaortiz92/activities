@@ -6,7 +6,7 @@ from config import engine
 from models import Base
 from routes import (
     activity, account, transaction, category,
-    description, kind
+    description, kind, origin
 )
 
 Base.metadata.create_all(bind=engine)
@@ -22,3 +22,4 @@ app.include_router(account)
 app.include_router(category)
 app.include_router(description)
 app.include_router(kind)
+app.include_router(origin)

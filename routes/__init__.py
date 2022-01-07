@@ -4,3 +4,4 @@ from .transaction import transaction
 from .category import category
 from .description import description
 from .kind import kind
+from .origin import origin
