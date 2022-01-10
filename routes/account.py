@@ -1,5 +1,4 @@
 # Python
-from datetime import datetime
 from typing import List
 
 # FastApi
@@ -10,12 +9,9 @@ from fastapi import Body, Path
 from sqlalchemy.orm.session import Session
 
 # App
-#from schemas import Message, MessageCreate
-from config import SessionLocal
 from schemas import Account
 import services
-from .utils import register_not_found
-from .utils import get_db
+from .utils import register_not_found, get_db
 
 
 # Account
