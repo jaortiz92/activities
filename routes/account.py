@@ -14,8 +14,8 @@ from sqlalchemy.orm.session import Session
 from config import SessionLocal
 from schemas import Account
 import services
-from .exceptions import register_not_found
-from .dependency import get_db
+from .utils import register_not_found
+from .utils import get_db
 
 
 # Account
