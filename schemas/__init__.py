@@ -6,4 +6,4 @@ from .description import Description
 from .group import Group
 from .kind import Kind
 from .origin import Origin
-from .transaction import TransactionCreate, TransactionShow
+from .transaction import TransactionCreate, TransactionShow, TransactionCompleteCreate

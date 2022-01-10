@@ -33,6 +33,10 @@ def get_activities(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Activity).offset(skip).limit(limit).all()
 
 
+def get_activities_by_transaction_id(db: Session, transaction_id: int):
+    return db.query(Activity).filter(Activity.transaction_id == transaction_id).all()
+
+
 def create_activity(db: Session, activity: schemas.ActivityCreate):
     validation = validate_foreign_keys(db, activity)
     if validation:

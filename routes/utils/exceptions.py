@@ -6,3 +6,10 @@ def register_not_found(register):
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"{register} does not exist"
     )
+
+
+def register_without_cr_and_db():
+    raise HTTPException(
+        status_code=status.HTTP_406_NOT_ACCEPTABLE,
+        detail="The register doesn't use a activity with CR and other with DB"
+    )

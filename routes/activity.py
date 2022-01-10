@@ -8,14 +8,15 @@ from fastapi import status
 from fastapi import Depends
 from fastapi import Body, Path
 from sqlalchemy.orm.session import Session
+from routes.utils.validate import if_error_redirect_activity, if_error_redirect_transaction
 
 # App
 #from schemas import Message, MessageCreate
 
 from schemas import ActivityCreate, ActivityShow
 import services
-from .exceptions import register_not_found
-from .dependency import get_db
+from .utils import register_not_found, if_error_redirect_activity
+from .utils import get_db
 
 
 # Activity
@@ -119,10 +120,7 @@ def create_an_activity(
     - updated_date: datetime
     """
     response = services.create_activity(db, activity)
-    if response == "transaction":
-        register_not_found("Transaction")
-    if response == "account":
-        register_not_found("Account")
+    if_error_redirect_transaction(response)
     return response
 
 
@@ -188,8 +186,5 @@ def update_an_activity(
     response = services.update_activity(db, activity_id, activity)
     if not response:
         register_not_found("Activity")
-    if response == "transaction":
-        register_not_found("Transaction")
-    if response == "account":
-        register_not_found("Account")
+    if_error_redirect_transaction(response)
     return response
