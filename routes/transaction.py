@@ -1,12 +1,12 @@
 # Python
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # FastApi
 from fastapi import APIRouter
 from fastapi import status
 from fastapi import Depends
-from fastapi import Body, Path
+from fastapi import Body, Path, Query
 from sqlalchemy.orm.session import Session
 
 # App
@@ -35,6 +35,18 @@ transaction = APIRouter(
     summary="Show all transactions"
 )
 def show_all_transactions(
+    skip: Optional[int] = Query(
+        default=0,
+        ge=0,
+        title="Skip",
+        description="Take the until row for show"
+    ),
+    limit: Optional[int] = Query(
+        default=100,
+        ge=0,
+        title="Limit",
+        description="Row's number to show"
+    ),
     db: Session = Depends(get_db)
 ):
     """
@@ -59,11 +71,11 @@ def show_all_transactions(
     - created_date: datetime,
     - updated_date: datetime
     """
-    return services.get_transactions(db, 0, 100)
+    return services.get_transactions(db, skip=skip, limit=limit)
 
 
 @transaction.get(
-    path="/{transaction_id}",
+    path="/{transaction_id}/search",
     response_model=TransactionShow,
     status_code=status.HTTP_200_OK,
     summary="Show a transaction"
@@ -291,3 +303,25 @@ def create_an_transaction_and_activities(
         services.delete_transaction(db, transaction_id)
         if_error_redirect_activity(response_activity_two)
     return services.get_transaction(db, transaction_id)
+
+
+@transaction.get(
+    path="/count",
+    status_code=status.HTTP_200_OK,
+    summary="Return number of Transactions"
+)
+def count_all_transactions(
+    db: Session = Depends(get_db)
+):
+    """
+    Return number of Transactions
+
+    This path operation counts all transactions in the app
+
+    Parameters:
+    - None
+
+    Retrurn a json con numbers of registers:
+    - registers: int
+    """
+    return {"registers": services.count_transactions(db)}
