@@ -19,3 +19,11 @@ def get_category(db: Session, category_id: int):
 
 def get_categories(db: Session):
     return db.query(Category).all()
+
+
+def get_categories_by_group(db: Session, group_id: int):
+    db_category = db.query(Category).filter(
+        Category.group_id == group_id).all()
+    if db_category:
+        return db_category
+    return None

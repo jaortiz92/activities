@@ -36,7 +36,7 @@ def show_all_accounts(
     This path operation show all accounts in the app
 
     Parameters:
-    -
+    - None
 
     Returns a json list with all accounts in the app, with the following keys
     - "account_id": int,

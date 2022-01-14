@@ -74,3 +74,33 @@ def show_a_kind(
     if not response:
         register_not_found("Kind")
     return response
+
+
+@kind.get(
+    path="/group/{group_id}",
+    response_model=List[Kind],
+    status_code=status.HTTP_200_OK,
+    summary="Show Kinds filter by group"
+)
+def show_kinds_by_group(
+    group_id: int = Path(..., gt=0),
+    db: Session = Depends(get_db)
+):
+    """
+    Show Kinds filter by group
+
+    This path operation show all kinds in the app with a group selected
+
+    Parameters:
+    - Register path parameter
+        - group_id: int
+
+    Returns a json list with all kinds in the app, with the following keys
+    kind_id: int,
+    group: Group
+    kind: str
+    """
+    response = services.get_kinds_by_group(db, group_id)
+    if not response:
+        register_not_found("Group in kinds")
+    return response
