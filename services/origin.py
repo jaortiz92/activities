@@ -18,4 +18,4 @@ def get_origin(db: Session, origin_id: int):
 
 
 def get_origins(db: Session):
-    return db.query(Origin).all()
+    return db.query(Origin).order_by(Origin.origin).all()

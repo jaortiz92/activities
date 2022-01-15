@@ -40,7 +40,9 @@ def get_transaction(db: Session, transaction_id: int):
 
 
 def get_transactions(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Transaction).order_by(Transaction.transaction_date.desc()).offset(skip).limit(limit).all()
+    return db.query(Transaction).order_by(Transaction.transaction_date.desc(),
+                                          Transaction.transaction_id.desc()
+                                          ).offset(skip).limit(limit).all()
 
 
 def create_transaction(db: Session, transaction: schemas.TransactionCreate):
