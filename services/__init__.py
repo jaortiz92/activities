@@ -5,3 +5,4 @@ from .category import *
 from .description import *
 from .king import *
 from .origin import *
+from .query import *

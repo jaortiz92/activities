@@ -1,6 +1,7 @@
 # Python
 from typing import List
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 # App
 import models
@@ -39,7 +40,9 @@ def get_transaction(db: Session, transaction_id: int):
 
 
 def get_transactions(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Transaction).offset(skip).limit(limit).all()
+    return db.query(Transaction).order_by(Transaction.transaction_date.desc(),
+                                          Transaction.transaction_id.desc()
+                                          ).offset(skip).limit(limit).all()
 
 
 def create_transaction(db: Session, transaction: schemas.TransactionCreate):
@@ -73,3 +76,7 @@ def update_transaction(db: Session, transaction_id: int, transaction: schemas.Tr
         db.commit()
         return get_transaction(db, transaction_id)
     return None
+
+
+def count_transactions(db: Session):
+    return db.query(func.count(Transaction.transaction_id)).scalar()

@@ -74,3 +74,33 @@ def show_a_category(
     if not response:
         register_not_found("Category")
     return response
+
+
+@category.get(
+    path="/group/{group_id}",
+    response_model=List[Category],
+    status_code=status.HTTP_200_OK,
+    summary="Show Categories filter by group"
+)
+def show_categories_by_group(
+    group_id: int = Path(..., gt=0),
+    db: Session = Depends(get_db)
+):
+    """
+    Show Categories filter by group
+
+    This path operation show all categories in the app with a group selected
+
+    Parameters:
+    - Register path parameter
+        - group_id: int
+
+    Returns a json list with all categories in the app, with the following keys
+    category_id: int,
+    group: Group
+    category: str
+    """
+    response = services.get_categories_by_group(db, group_id)
+    if not response:
+        register_not_found("Group in categories")
+    return response
