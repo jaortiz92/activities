@@ -7,3 +7,4 @@ from .group import Group
 from .kind import Kind
 from .origin import Origin
 from .transaction import TransactionCreate, TransactionShow, TransactionCompleteCreate
+from .query import DepositAccount
