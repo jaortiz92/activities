@@ -19,3 +19,11 @@ def get_kind(db: Session, kind_id: int):
 
 def get_kinds(db: Session):
     return db.query(Kind).all()
+
+
+def get_kinds_by_group(db: Session, group_id: int):
+    db_kind = db.query(Kind).filter(
+        Kind.group_id == group_id).all()
+    if db_kind:
+        return db_kind
+    return None

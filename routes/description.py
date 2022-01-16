@@ -27,7 +27,7 @@ description = APIRouter(
     status_code=status.HTTP_200_OK,
     summary="Show all Description"
 )
-def show_all_categories(
+def show_all_descriptions(
     db: Session = Depends(get_db)
 ):
     """
@@ -73,4 +73,34 @@ def show_a_description(
     response = services.get_description(db, description_id)
     if not response:
         register_not_found("Description")
+    return response
+
+
+@description.get(
+    path="/group/{group_id}",
+    response_model=List[Description],
+    status_code=status.HTTP_200_OK,
+    summary="Show Descriptions filter by group"
+)
+def show_descriptions_by_group(
+    group_id: int = Path(..., gt=0),
+    db: Session = Depends(get_db)
+):
+    """
+    Show Descriptions filter by group
+
+    This path operation show all descriptions in the app with a group selected
+
+    Parameters:
+    - Register path parameter
+        - group_id: int
+
+    Returns a json list with all descriptions in the app, with the following keys
+    description_id: int,
+    group: Group
+    description: str
+    """
+    response = services.get_descriptions_by_group(db, group_id)
+    if not response:
+        register_not_found("Group in descriptions")
     return response

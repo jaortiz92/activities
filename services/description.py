@@ -18,4 +18,12 @@ def get_description(db: Session, description_id: int):
 
 
 def get_descriptions(db: Session):
-    return db.query(Description).all()
+    return db.query(Description).order_by(Description.description).all()
+
+
+def get_descriptions_by_group(db: Session, group_id: int):
+    db_description = db.query(Description).filter(
+        Description.group_id == group_id).order_by(Description.description).all()
+    if db_description:
+        return db_description
+    return None
