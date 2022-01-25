@@ -69,3 +69,16 @@ def update_activity(db: Session, activity_id: int, activity: schemas.ActivityCre
         db.commit()
         return get_activity(db, activity_id)
     return None
+
+
+def get_activities_by_transaction_show(db: Session, transaction_id: int):
+    activities = get_activities_by_transaction_id(db, transaction_id)
+    activities_dict = []
+    for a in activities:
+        activity = {
+            "account_id": a.__dict__["account_id"],
+            "activity_id": a.__dict__["activity_id"],
+            "nature": a.__dict__["nature"]
+        }
+        activities_dict.append(activity)
+    return activities_dict

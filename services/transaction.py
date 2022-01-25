@@ -1,11 +1,11 @@
 # Python
 from typing import List
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, text
 
 # App
 import models
-from models import Transaction
+from models import Transaction, Activity
 import services
 import schemas
 
@@ -80,3 +80,42 @@ def update_transaction(db: Session, transaction_id: int, transaction: schemas.Tr
 
 def count_transactions(db: Session):
     return db.query(func.count(Transaction.transaction_id)).scalar()
+
+
+def get_transactions_show(db: Session, skip: int = 0, limit: int = 100):
+
+    sql = ("SELECT * FROM transactions_with_activities_show "
+           "ORDER BY transaction_date DESC, transaction_id DESC, nature DESC "
+           f"LIMIT {limit * 2} OFFSET {skip * 2}")
+    db_query = db.execute(
+        text(sql)).all()
+    result_query = []
+
+    for index in range(0, len(db_query), 2):
+        activities = [
+            {
+                "account_id": db_query[index][10],
+                "activity_id": db_query[index][9],
+                "nature": db_query[index][11]
+            },
+            {
+                "account_id": db_query[index + 1][10],
+                "activity_id": db_query[index + 1][9],
+                "nature": db_query[index + 1][11]
+            }
+        ]
+
+        result_query.append({
+            "transaction_id": db_query[index][0],
+            "transaction_date": db_query[index][1],
+            "category": db_query[index][2],
+            "description": db_query[index][3],
+            "kind": db_query[index][4],
+            "activities": activities,
+            "origin": db_query[index][5],
+            "destiny": db_query[index][6],
+            "value": db_query[index][7],
+            "detail": db_query[index][8],
+        })
+
+    return result_query
