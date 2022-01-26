@@ -14,7 +14,8 @@ from sqlalchemy.orm.session import Session
 
 from schemas import (
     TransactionCreate, TransactionShow,
-    TransactionCompleteCreate, ActivityCreate
+    TransactionCompleteCreate, ActivityCreate,
+    TransactionShowFront
 )
 import services
 from .utils import (
@@ -325,3 +326,47 @@ def count_all_transactions(
     - registers: int
     """
     return {"registers": services.count_transactions(db)}
+
+
+@transaction.get(
+    path="/transactionShowFront",
+    response_model=List[TransactionShowFront],
+    status_code=status.HTTP_200_OK,
+    summary="Show all transactions to front"
+)
+def show_all_transactions(
+    skip: Optional[int] = Query(
+        default=0,
+        ge=0,
+        title="Skip",
+        description="Take the until row for show"
+    ),
+    limit: Optional[int] = Query(
+        default=100,
+        ge=0,
+        title="Limit",
+        description="Row's number to show"
+    ),
+    db: Session = Depends(get_db)
+):
+    """
+    Show all Transactions
+
+    This path operation show all transactions in the app
+
+    Paramters:
+    - 
+
+    Retrurns a json list with all transactions, with the following keys
+    transaction_date: date,
+    - value: int,
+    - detail: str,
+    - transaction_id: int,
+    - category: str
+    - description: str
+    - kind: str,
+    - origin: str,
+    - destiny: str,
+    - activities: [Activity],
+    """
+    return services.get_transactions_show(db, skip=skip, limit=limit)

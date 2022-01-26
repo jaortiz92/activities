@@ -34,3 +34,9 @@ class ActivityShow(ActivityBase):
 
 class ActivityCompleteCreate(ActivityCreate):
     transaction_id: Optional[int] = Field(default=None, gt=0)
+
+
+class ActivityShowFront(BaseModel):
+    nature: str = Field(...)
+    account_id: int = Field(..., gt=0)
+    activity_id: int = Field(..., gt=0)
