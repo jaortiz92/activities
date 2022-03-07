@@ -1,6 +1,6 @@
 from .account import Account
 from .activity import ActivityCreate, ActivityShow, ActivityShowFront
-from .category import Category
+from .category import Category, CategoryCreate
 from .classAcount import ClassAcount
 from .description import Description
 from .group import Group
