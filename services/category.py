@@ -52,7 +52,6 @@ def delete_category(db: Session, category_id: int):
     db_category: Category = get_category(db, category_id)
     if db_category:
         db_transaction = services.get_transactions_by_category(db, category_id)
-        print(db_transaction)
         if not db_transaction:
             db.delete(db_category)
             db.commit()

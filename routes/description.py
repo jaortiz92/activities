@@ -15,7 +15,8 @@ import services
 from .utils import (
     register_not_found, get_db,
     if_error_redirect_description,
-    register_with_transactions)
+    register_with_transactions,
+)
 
 
 # Description
@@ -167,3 +168,39 @@ def delete_a_description(
     elif response == "Transactions":
         register_with_transactions("Description", description_id)
     return {"detail": response}
+
+
+@description.put(
+    path="/{description_id}/update",
+    response_model=Description,
+    status_code=status.HTTP_200_OK,
+    summary="Update a Description"
+)
+def update_a_description(
+    description_id: int = Path(..., gt=0),
+    description: DescriptionCreate = Body(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Update a Description
+
+    This path operation update a description in the app
+
+    Parameters:
+    - Register path parameter
+        - description_id: int
+    - Register body parameter
+        - group_id: int
+        - description: str
+
+    Retrurns a json with a description, with the following keys
+
+    - description_id: int,
+    - group_id: int,
+    - description: str
+    """
+    response = services.update_description(db, description_id, description)
+    if not response:
+        register_not_found("Description")
+    if_error_redirect_description(response)
+    return response

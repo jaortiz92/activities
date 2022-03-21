@@ -62,7 +62,7 @@ def delete_description(db: Session, description_id: int):
     return None
 
 
-def update_category(db: Session, description_id: int, description: schemas.DescriptionCreate):
+def update_description(db: Session, description_id: int, description: schemas.DescriptionCreate):
     validation = validate_foreign_keys(db, description)
     if validation:
         return validation

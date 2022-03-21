@@ -1,6 +1,5 @@
 # Python
 from typing import List
-from urllib import response
 
 # FastApi
 from fastapi import APIRouter
@@ -167,3 +166,39 @@ def delete_a_category(
     elif response == "Transactions":
         register_with_transactions("Category", category_id)
     return {"detail": response}
+
+
+@category.put(
+    path="/{category_id}/update",
+    response_model=Category,
+    status_code=status.HTTP_200_OK,
+    summary="Update a Category"
+)
+def update_a_category(
+    category_id: int = Path(..., gt=0),
+    category: CategoryCreate = Body(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Update a Category
+
+    This path operation update a category in the app
+
+    Parameters:
+    - Register path parameter
+        - category_id: int
+    - Register body parameter
+        - group_id: int
+        - category: str
+
+    Retrurns a json with a category, with the following keys
+
+    - category_id: int,
+    - group_id: int,
+    - category: str
+    """
+    response = services.update_category(db, category_id, category)
+    if not response:
+        register_not_found("Category")
+    if_error_redirect_category(response)
+    return response
