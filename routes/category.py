@@ -8,12 +8,14 @@ from fastapi import status
 from fastapi import Depends
 from fastapi import Body, Path
 from sqlalchemy.orm.session import Session
-from routes.utils.validate import if_error_redirect_category
 
 # App
 from schemas import Category, CategoryCreate
 import services
-from .utils import register_not_found, get_db
+from .utils import (
+    register_not_found, get_db,
+    if_error_redirect_category,
+    register_with_transactions)
 
 
 # Category
@@ -126,13 +128,13 @@ def create_a_category(
     Parameters:
     - Register body parameter
         - group_id: int
-        - description: str
+        - category: str
 
     Retrurns a json with a category, with the following keys
 
-    - description_id: int,
+    - category_id: int,
     - group_id: int,
-    - description: str
+    - category: str
     """
     response = services.create_category(db, category)
     if_error_redirect_category(response)
@@ -162,4 +164,6 @@ def delete_a_category(
     response = services.delete_category(db, category_id)
     if not response:
         register_not_found("Category")
+    elif response == "Transactions":
+        register_with_transactions("Category", category_id)
     return {"detail": response}

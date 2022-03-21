@@ -8,12 +8,14 @@ from models import Category
 import services
 import schemas
 
+
 def validate_foreign_keys(db: Session, category: schemas.CategoryCreate):
     db_group: models.Group = services.get_group(
         db, category.group_id)
     if not db_group:
         return "group"
     return None
+
 
 def get_category(db: Session, category_id: int):
     db_category = db.query(Category).filter(
@@ -34,6 +36,7 @@ def get_categories_by_group(db: Session, group_id: int):
         return db_category
     return None
 
+
 def create_category(db: Session, category: schemas.CategoryCreate):
     validation = validate_foreign_keys(db, category)
     if validation:
@@ -44,18 +47,25 @@ def create_category(db: Session, category: schemas.CategoryCreate):
     db.refresh(db_category)
     return db_category
 
+
 def delete_category(db: Session, category_id: int):
     db_category: Category = get_category(db, category_id)
     if db_category:
-        db.delete(db_category)
-        db.commit()
-        return f"Category with category_id {db_category.category_id} deleted"
+        db_transaction = services.get_transactions_by_category(db, category_id)
+        print(db_transaction)
+        if not db_transaction:
+            db.delete(db_category)
+            db.commit()
+            return f"Category with category_id {db_category.category_id} deleted"
+        else:
+            return f"Transactions"
     return None
+
 
 def update_category(db: Session, category_id: int, category: schemas.CategoryCreate):
     validation = validate_foreign_keys(db, category)
     if validation:
-        return validation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+        return validation
     db_category = db.query(Category).filter(
         Category.category_id == category_id
     )
