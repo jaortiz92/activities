@@ -1,5 +1,6 @@
 # Python
 from typing import List
+from urllib import response
 
 # FastApi
 from fastapi import APIRouter
@@ -9,9 +10,13 @@ from fastapi import Body, Path
 from sqlalchemy.orm.session import Session
 
 # App
-from schemas import Description
+from schemas import Description, DescriptionCreate
 import services
-from .utils import register_not_found, get_db
+from .utils import (
+    register_not_found, get_db,
+    if_error_redirect_description,
+    register_with_transactions,
+)
 
 
 # Description
@@ -103,4 +108,99 @@ def show_descriptions_by_group(
     response = services.get_descriptions_by_group(db, group_id)
     if not response:
         register_not_found("Group in descriptions")
+    return response
+
+
+@description.post(
+    path="/post",
+    response_model=Description,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a description"
+)
+def create_a_description(
+    description: DescriptionCreate = Body(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Create a Description
+
+    This path operation register a description in the app
+
+    Parameters:
+    - Register body parameter
+        - group_id: int
+        - description: str
+
+    Retrurns a json with a description, with the following keys
+
+    - description_id: int,
+    - group_id: int,
+    - description: str
+    """
+    response = services.create_description(db, description)
+    if_error_redirect_description(response)
+    return response
+
+
+@description.delete(
+    path="/{description_id}/delete",
+    status_code=status.HTTP_200_OK,
+    summary="Delete a description"
+)
+def delete_a_description(
+    description_id: int = Path(..., gt=0),
+    db: Session = Depends(get_db)
+):
+    """
+    Delete a Description
+
+    This path operation delete a description
+
+    Parameters:
+    - Register path parameter
+        - description_id: int
+
+    Return a json with information about deletion
+    """
+    response = services.delete_description(db, description_id)
+    if not response:
+        register_not_found("Description")
+    elif response == "Transactions":
+        register_with_transactions("Description", description_id)
+    return {"detail": response}
+
+
+@description.put(
+    path="/{description_id}/update",
+    response_model=Description,
+    status_code=status.HTTP_200_OK,
+    summary="Update a Description"
+)
+def update_a_description(
+    description_id: int = Path(..., gt=0),
+    description: DescriptionCreate = Body(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Update a Description
+
+    This path operation update a description in the app
+
+    Parameters:
+    - Register path parameter
+        - description_id: int
+    - Register body parameter
+        - group_id: int
+        - description: str
+
+    Retrurns a json with a description, with the following keys
+
+    - description_id: int,
+    - group_id: int,
+    - description: str
+    """
+    response = services.update_description(db, description_id, description)
+    if not response:
+        register_not_found("Description")
+    if_error_redirect_description(response)
     return response

@@ -22,7 +22,13 @@ def if_error_redirect_activity(response):
     if response == "account":
         register_not_found("Account")
 
+def if_error_redirect_category(response):
+    if response == "group":
+        register_not_found("Group")
+
+def if_error_redirect_description(response):
+    if_error_redirect_category(response)
 
 def validate_cr_and_db(activity_one, activity_two):
     if activity_one["nature"] == activity_two["nature"]:
-        register_without_of_cr_and_db()
+        register_without_cr_and_db()

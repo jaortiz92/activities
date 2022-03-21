@@ -5,7 +5,7 @@ from sqlalchemy import func, text
 
 # App
 import models
-from models import Transaction, Activity
+from models import Transaction, Activity, Category, Description
 import services
 import schemas
 
@@ -43,6 +43,24 @@ def get_transactions(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Transaction).order_by(Transaction.transaction_date.desc(),
                                           Transaction.transaction_id.desc()
                                           ).offset(skip).limit(limit).all()
+
+
+def get_transactions_by_category(db: Session, category_id: int):
+    db_transaction = db.query(Transaction).filter(
+        Transaction.category_id == category_id
+    ).all()
+    if db_transaction:
+        return db_transaction
+    return None
+
+
+def get_transactions_by_description(db: Session, description_id: int):
+    db_transaction = db.query(Transaction).filter(
+        Transaction.description_id == description_id
+    ).all()
+    if db_transaction:
+        return db_transaction
+    return None
 
 
 def create_transaction(db: Session, transaction: schemas.TransactionCreate):
